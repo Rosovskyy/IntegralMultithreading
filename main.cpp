@@ -93,7 +93,15 @@ configuration read_conf(istream &cf) {
 
 
 double func_to_integrate(const double &x, const double &y) {
-    return sqrt(pow(x, 5)) + pow(y, 6);
+    double result = 0;
+    for (int i = -2; i <= 2; ++i) {
+        for (int j = -2; j <= 2; ++j) {
+            result += 1 / (5 * (i + 2) + j + 3 + pow(x - 16 * j, 6) + pow(y - 16 * i, 6));
+        }
+    }
+
+    result += 0.002;
+    return pow(result, -1);
 }
 
 
@@ -123,6 +131,20 @@ integrate(double (*func)(double const &, double const &), int start, int finish,
 }
 
 
+void createThreads(std::vector<std::thread> &threads, int thread_num, double (*func)(double const &, double const &),
+                   configuration config, int steps, double &result) {
+    for (int i = 0; i < thread_num; i++) {
+        threads.emplace_back(
+                std::thread(integrate, func_to_integrate, steps / thread_num * i, steps / thread_num * (i + 1), config,
+                            steps, std::ref(result)));
+    }
+
+    for (int i = 0; i < thread_num; ++i) {
+        threads[i].join();
+    }
+}
+
+
 int main(int argc, char *argv[]) {
 
     string filename;
@@ -142,7 +164,8 @@ int main(int argc, char *argv[]) {
         return 2;
     }
 
-    configuration config;
+    configuration
+    config;
     try {
         config = read_conf(config_stream);
     } catch (std::exception &ex) {
@@ -156,15 +179,7 @@ int main(int argc, char *argv[]) {
 
     size_t steps = config.initial_steps;
 
-    for (int i = 0; i < thread_num; i++) {
-        threads.emplace_back(
-                std::thread(integrate, func_to_integrate, steps / thread_num * i, steps / thread_num * (i + 1), config,
-                            steps, std::ref(result)));
-    }
-
-    for (int i = 0; i < thread_num; ++i) {
-        threads[i].join();
-    }
+    createThreads(std::ref(threads), thread_num, func_to_integrate, config, steps, std::ref(result));
 
     threads.clear();
 
@@ -183,18 +198,9 @@ int main(int argc, char *argv[]) {
 #endif
         prev_res = cur_res;
         steps *= 2;
-
         result = 0;
 
-        for (int i = 0; i < thread_num; i++) {
-            threads.emplace_back(
-                    std::thread(integrate, func_to_integrate, steps / thread_num * i, steps / thread_num * (i + 1), config,
-                                steps, std::ref(result)));
-        }
-
-        for (int i = 0; i < thread_num; ++i) {
-            threads[i].join();
-        }
+        createThreads(std::ref(threads), thread_num, func_to_integrate, config, steps, std::ref(result));
 
         threads.clear();
 
@@ -212,7 +218,6 @@ int main(int argc, char *argv[]) {
 
     auto time_to_calculate = get_current_time_fenced() - before;
 
-    cout << "DOUBLE RESULT: " << result << endl;
     cout << "Result: " << cur_res << endl;
     cout << "Abs err : rel err " << abs_err << " : " << rel_err << endl;
     cout << "Time: " << to_us(time_to_calculate) << endl;
