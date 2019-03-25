@@ -1,0 +1,16 @@
+/Volumes/Transcend/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" "/Volumes/Transcend/UCU/2year/2 sem/ACS/integrate"
+CMake Error at /Volumes/Transcend/Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.12/Modules/Compiler/._ADSP-DetermineCompiler.cmake:1:
+  Parse error.  Expected a command name, got bad character with text "".
+Call Stack (most recent call first):
+  /Volumes/Transcend/Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.12/Modules/CMakeCompilerIdDetection.cmake:6 (include)
+  /Volumes/Transcend/Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.12/Modules/CMakeCompilerIdDetection.cmake:32 (_readFile)
+  /Volumes/Transcend/Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.12/Modules/CMakeDetermineCompilerId.cmake:144 (compiler_id_detection)
+  /Volumes/Transcend/Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.12/Modules/CMakeDetermineCompilerId.cmake:163 (CMAKE_DETERMINE_COMPILER_ID_WRITE)
+  /Volumes/Transcend/Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.12/Modules/CMakeDetermineCompilerId.cmake:31 (CMAKE_DETERMINE_COMPILER_ID_BUILD)
+  /Volumes/Transcend/Applications/CLion.app/Contents/bin/cmake/mac/share/cmake-3.12/Modules/CMakeDetermineCCompiler.cmake:112 (CMAKE_DETERMINE_COMPILER_ID)
+  CMakeLists.txt:2 (project)
+
+
+CMake Error: CMAKE_CXX_COMPILER not set, after EnableLanguage
+-- Configuring incomplete, errors occurred!
+See also "/Volumes/Transcend/UCU/2year/2 sem/ACS/integrate/cmake-build-debug/CMakeFiles/CMakeOutput.log".
