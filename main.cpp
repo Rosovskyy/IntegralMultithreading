@@ -11,86 +11,15 @@
 #include <thread>
 #include <vector>
 #include <tuple>
-#include <fstream>
-#include <chrono>
 
 #include "string.h"
+#include "helpers/helpers.h"
 
-
-using namespace std;
-
-inline std::chrono::steady_clock::time_point get_current_time_fenced() {
-    assert(std::chrono::steady_clock::is_steady &&
-           "Timer should be steady (monotonic).");
-    std::atomic_thread_fence(std::memory_order_seq_cst);
-    auto res_time = std::chrono::steady_clock::now();
-    std::atomic_thread_fence(std::memory_order_seq_cst);
-    return res_time;
-}
-
-template<class D>
-inline long long to_us(const D &d) {
-    return std::chrono::duration_cast<std::chrono::microseconds>(d).count();
-}
-
-struct configuration {
-    double rel_err, abs_err;
-    double x1, x2;
-    double y1, y2;
-    size_t initial_steps;
-    size_t max_steps;
-};
-
-
-configuration read_conf(istream &cf) {
-    ios::fmtflags flags(cf.flags()); // Save stream state
-    cf.exceptions(std::ifstream::failbit); // Enable exception on fail
-
-    configuration res;
-    string temp;
-
-    try {
-        cf >> res.rel_err;
-        getline(cf, temp); // Відкидаємо комент.
-        cf >> res.abs_err;
-        getline(cf, temp);
-        cf >> res.x1;
-        getline(cf, temp);
-        cf >> res.x2;
-        getline(cf, temp);
-        cf >> res.y1;
-        getline(cf, temp);
-        cf >> res.y2;
-        getline(cf, temp);
-        cf >> res.initial_steps;
-        getline(cf, temp);
-        cf >> res.max_steps;
-        getline(cf, temp);
-    } catch (std::ios_base::failure &fail) // Life without RAII is hard...
-    {
-        cf.flags(flags);
-        throw; // re-throw exception
-    }
-    cf.flags(flags);
-    if (res.x2 <= res.x1) {
-        throw std::runtime_error("x1 should be <= x2");
-    }
-    if (res.y2 <= res.y1) {
-        throw std::runtime_error("y1 should be <= y2");
-    }
-    if (res.initial_steps < 10) {
-        throw std::runtime_error("Too few initial_steps");
-    }
-    if (res.max_steps < 10) {
-        throw std::runtime_error("Too small max_steps");
-    }
-    if (res.abs_err <= 0 || res.rel_err <= 0) {
-        throw std::runtime_error("Errors should be positive");
-    }
-
-    return res;
-}
-
+using std::cout;
+using std::string;
+using std::cerr;
+using std::endl;
+using std::ifstream;
 
 double func_to_integrate(const double &x, const double &y) {
     double result = 0;
@@ -99,16 +28,14 @@ double func_to_integrate(const double &x, const double &y) {
             result += 1 / (5 * (i + 2) + j + 3 + pow(x - 16 * j, 6) + pow(y - 16 * i, 6));
         }
     }
-
     result += 0.002;
     return pow(result, -1);
 }
 
 
 // template<typename func_T>
-double
-integrate(double (*func)(double const &, double const &), int start, int finish, configuration conf, size_t steps,
-          double &result) {
+double integrate(double (*func)(double const &, double const &),
+                 int start, int finish, configuration conf, size_t steps, double &result) {
     double delta_x = (conf.x2 - conf.x1) / steps;
     double delta_y = (conf.y2 - conf.y1) / steps;
     double res = 0;
@@ -132,7 +59,7 @@ integrate(double (*func)(double const &, double const &), int start, int finish,
 
 
 void createThreads(std::vector<std::thread> &threads, int thread_num, double (*func)(double const &, double const &),
-                   configuration config, int steps, double &result) {
+                   configuration config, size_t steps, double &result) {
     for (int i = 0; i < thread_num; i++) {
         threads.emplace_back(
                 std::thread(integrate, func_to_integrate, steps / thread_num * i, steps / thread_num * (i + 1), config,
@@ -155,7 +82,7 @@ int main(int argc, char *argv[]) {
     }
 
     filename = argv[2];
-    int thread_num = std::atoi(argv[1]);
+    int thread_num = std::stoi(argv[1]);
     std::vector <std::thread> threads;
 
     ifstream config_stream(filename);
@@ -164,8 +91,7 @@ int main(int argc, char *argv[]) {
         return 2;
     }
 
-    configuration
-    config;
+    configuration config{};
     try {
         config = read_conf(config_stream);
     } catch (std::exception &ex) {
