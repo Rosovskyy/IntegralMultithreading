@@ -62,10 +62,21 @@ void run_threads(int thread_num, size_t steps, configuration config, std::atomic
     std::vector <std::thread> threads;
     threads.reserve(static_cast<unsigned long>(thread_num));
 
+//    int value_per_thread = static_cast<int>(ceil(steps / static_cast<double>(thread_num)));
+//    int start_value = 0;
+//    int end_value = start_value + value_per_thread;
+
     for (int i = 0; i < thread_num; i++) {
         threads.emplace_back(
                 std::thread(integrate_atomic, func_to_integrate, steps / thread_num * i, steps / thread_num * (i + 1), config,
                             steps, std::ref(result)));
+//        threads.emplace_back(
+//                std::thread(integrate_atomic, func_to_integrate, start_value, end_value, config,
+//                            steps, std::ref(result)));
+//        if(end_value >= steps)
+//            break;
+//        start_value += value_per_thread;
+//        end_value += value_per_thread;
     }
 
     for (int i = 0; i < thread_num; ++i) {

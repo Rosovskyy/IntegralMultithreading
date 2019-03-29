@@ -54,8 +54,8 @@ configuration read_conf(std::istream &cf) {
 }
 
 void Result::print() {
-    std::cout << "Result: " << result << std::endl;
-    std::cout << "Abs err: " << abs_err << std::endl;
-    std::cout << "Rel error: " << rel_err << std::endl;
-    std::cout << "Time: " << time << std::endl;
+    std::cout << "Result: [" << result << "]" << std::endl;
+    std::cout << "Abs err: [" << abs_err << "]" << std::endl;
+    std::cout << "Rel error: [" << rel_err << "]" << std::endl;
+    std::cout << "Time: [" << time << "]" << std::endl;
 }
