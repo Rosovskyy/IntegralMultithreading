@@ -2,7 +2,7 @@
 // Created by Yevhenii on 28/03/2019.
 //
 
-#include "helpers.h"
+#include "../headers/helpers.h"
 
 configuration read_conf(std::istream &cf) {
     std::ios::fmtflags flags(cf.flags()); // Save stream state
@@ -51,4 +51,11 @@ configuration read_conf(std::istream &cf) {
     }
 
     return res;
+}
+
+void Result::print() {
+    std::cout << "Result: " << result << std::endl;
+    std::cout << "Abs err: " << abs_err << std::endl;
+    std::cout << "Rel error: " << rel_err << std::endl;
+    std::cout << "Time: " << time << std::endl;
 }

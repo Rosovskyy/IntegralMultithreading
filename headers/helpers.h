@@ -34,6 +34,15 @@ struct configuration {
     size_t max_steps;
 };
 
+struct Result{
+    double result;
+    double rel_err;
+    double abs_err;
+    long long time;
+
+    void print();
+};
+
 configuration read_conf(std::istream &cf);
 
 #endif //INTEGRATE_HELPERS_H
