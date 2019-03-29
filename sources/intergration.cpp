@@ -15,8 +15,28 @@ double func_to_integrate(const double &x, const double &y) {
     return pow(result, -1);
 }
 
-double integrate(double (*func)(double const &, double const &),
-                 int start, int finish, configuration conf, size_t steps, double &result) {
+double integrate(double (*func)(double const &, double const &), configuration conf, size_t steps) {
+    double delta_x = (conf.x2 - conf.x1) / steps;
+    double delta_y = (conf.y2 - conf.y1) / steps;
+    double res = 0;
+
+    for (int i = 0; i < steps; i++) {
+        for (int j = 0; j < steps; j++) {
+            double area = func(conf.x1 + (delta_x * i), conf.y1 + (delta_y * j));
+            area += func(conf.x1 + (delta_x * (i + 1)), conf.y1 + (delta_y * j));
+            area += func(conf.x1 + (delta_x * (i + 1)), conf.y1 + (delta_y * (j + 1)));
+            area += func(conf.x1 + (delta_x * i), conf.y1 + (delta_y * (j + 1)));
+            area /= 4;
+
+            res = res + delta_x * delta_y * area;
+        }
+    }
+
+    return res;
+}
+
+double integrate_atomic(double (*func)(double const &, double const &),
+                 int start, int finish, configuration conf, size_t steps, std::atomic<double>& result) {
     double delta_x = (conf.x2 - conf.x1) / steps;
     double delta_y = (conf.y2 - conf.y1) / steps;
     double res = 0;
@@ -29,22 +49,22 @@ double integrate(double (*func)(double const &, double const &),
             area += func(conf.x1 + (delta_x * i), conf.y1 + (delta_y * (j + 1)));
             area /= 4;
 
-            res += delta_x * delta_y * area;
+            res = res + delta_x * delta_y * area;
         }
     }
 
-    result += res;
+    result = result + res;
 
     return res;
 }
 
-void run_threads(int thread_num, size_t steps, configuration config, double &result) {
+void run_threads(int thread_num, size_t steps, configuration config, std::atomic<double>& result) {
     std::vector <std::thread> threads;
     threads.reserve(static_cast<unsigned long>(thread_num));
 
     for (int i = 0; i < thread_num; i++) {
         threads.emplace_back(
-                std::thread(integrate, func_to_integrate, steps / thread_num * i, steps / thread_num * (i + 1), config,
+                std::thread(integrate_atomic, func_to_integrate, steps / thread_num * i, steps / thread_num * (i + 1), config,
                             steps, std::ref(result)));
     }
 
@@ -55,11 +75,11 @@ void run_threads(int thread_num, size_t steps, configuration config, double &res
 }
 
 Result run_multi_thread_solution(configuration config, int threads_num){
-    double result = 0;
+    std::atomic<double> result {};
+    std::atomic_init(&result, 0.0);
+
     size_t steps = config.initial_steps;
-
     auto before = get_current_time_fenced();
-
     run_threads(threads_num, steps, config, std::ref(result));
 
     double abs_err{-1}; // Just guard value
@@ -85,7 +105,34 @@ Result run_multi_thread_solution(configuration config, int threads_num){
     }
 
     auto time_to_calculate = get_current_time_fenced() - before;
+    Result r{cur_res, abs_err, rel_err, to_us(time_to_calculate)};
+    return r;
+}
 
+Result run_one_thread_solution(configuration config){
+    size_t steps = config.initial_steps;
+    auto before = get_current_time_fenced();
+
+    double abs_err{-1}; // Just guard value
+    double rel_err{-1}; // Just guard value
+    double prev_res;
+    double cur_res {integrate(func_to_integrate, config, steps)};
+    bool to_continue {true};
+
+    while (to_continue) {
+        prev_res = cur_res;
+        steps *= 2;
+
+        cur_res = integrate(func_to_integrate, config, steps);
+        abs_err = fabs(cur_res - prev_res);
+        rel_err = fabs((cur_res - prev_res) / cur_res);
+
+        to_continue = (abs_err > config.abs_err);
+        to_continue = to_continue && (rel_err > config.rel_err);
+        to_continue = to_continue && (steps < config.max_steps);
+    }
+
+    auto time_to_calculate = get_current_time_fenced() - before;
     Result r{cur_res, abs_err, rel_err, to_us(time_to_calculate)};
     return r;
 }

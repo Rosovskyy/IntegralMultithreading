@@ -1,3 +1,7 @@
+//
+// Created by Yevhenii on 29/03/2019.
+//
+
 #include <iostream>
 #include <fstream>
 #include <limits>
@@ -13,8 +17,8 @@
 #include <tuple>
 
 #include "string.h"
-#include "headers/helpers.h"
-#include "headers/intergration.h"
+#include "../headers/helpers.h"
+#include "../headers/intergration.h"
 
 using std::cout;
 using std::string;
@@ -23,16 +27,13 @@ using std::endl;
 using std::ifstream;
 
 int main(int argc, char *argv[]) {
-    string filename;
-    if (argc != 3) {
+    if (argc != 2) {
         std::cout << "Wrong number of arguments" << std::endl;
-        std::cout << "The format is following: <number of threads> <input file>" << std::endl;
+        std::cout << "The format is following: <input file>" << std::endl;
         return 1;
     }
 
-    filename = argv[2];
-    int thread_num = std::stoi(argv[1]);
-
+    string filename = argv[1];
     ifstream config_stream(filename);
     if (!config_stream.is_open()) {
         cerr << "Failed to open configuration file " << filename << endl;
@@ -47,7 +48,7 @@ int main(int argc, char *argv[]) {
         return 3;
     }
 
-    run_multi_thread_solution(config, thread_num).print();
+    run_one_thread_solution(config).print();
 
     return 0;
 }
