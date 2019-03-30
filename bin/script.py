@@ -8,7 +8,7 @@ def parse_result(result):
 
 
 def check_results(number_of_solutions, sol_number, mistake):
-    return True if number_of_solutions == sol_number else False
+    return True if abs(number_of_solutions - sol_number) < mistake else False
 
 
 def run_multi_thread_solution(times, multi_thread, num_of_threads, mistake, conf):
