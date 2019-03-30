@@ -35,8 +35,8 @@ double integrate(double (*func)(double const &, double const &), configuration c
     return res;
 }
 
-double integrate_atomic(double (*func)(double const &, double const &),
-                 int start, int finish, configuration conf, size_t steps, std::atomic<double>& result) {
+double integrate_mutex(double (*func)(double const &, double const &),
+                 int start, int finish, configuration conf, size_t steps, double& result, std::mutex& m) {
     double delta_x = (conf.x2 - conf.x1) / steps;
     double delta_y = (conf.y2 - conf.y1) / steps;
     double res = 0;
@@ -52,15 +52,16 @@ double integrate_atomic(double (*func)(double const &, double const &),
             res = res + delta_x * delta_y * area;
         }
     }
-
+    m.lock();
     result = result + res;
-
+    m.unlock();
     return res;
 }
 
-void run_threads(int thread_num, size_t steps, configuration config, std::atomic<double>& result) {
+void run_threads(int thread_num, size_t steps, configuration config, double& result) {
     std::vector <std::thread> threads;
     threads.reserve(static_cast<unsigned long>(thread_num));
+    std:: mutex m;
 
     size_t value_per_thread = steps / thread_num;
     size_t start_value = 0;
@@ -68,8 +69,8 @@ void run_threads(int thread_num, size_t steps, configuration config, std::atomic
 
     for (int i = 0; i < thread_num; i++) {
         threads.emplace_back(
-                std::thread(integrate_atomic, func_to_integrate, start_value, end_value, config,
-                            steps, std::ref(result)));
+                std::thread(integrate_mutex, func_to_integrate, start_value, end_value, config,
+                            steps, std::ref(result), std::ref(m)));
 
         start_value += value_per_thread;
         end_value += value_per_thread;
@@ -86,8 +87,9 @@ void run_threads(int thread_num, size_t steps, configuration config, std::atomic
 }
 
 Result run_multi_thread_solution(configuration config, int threads_num){
-    std::atomic<double> result {};
-    std::atomic_init(&result, 0.0);
+//    std::atomic<double> result {};
+//    std::atomic_init(&result, 0.0);
+    double result = 0;
 
     size_t steps = config.initial_steps;
     auto before = get_current_time_fenced();

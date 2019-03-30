@@ -1,8 +1,8 @@
-0.001       # relative error
+0.01       # relative error
 0.05        # absolute error
 -50         # x1
 50          # x2
 -50         # y1
 50          # y2і
 100         # initial steps
-100000      # max steps
+1000      # max steps
