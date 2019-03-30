@@ -1,7 +1,3 @@
-//
-// Created by Yevhenii on 28/03/2019.
-//
-
 #ifndef INTEGRATE_HELPERS_H
 #define INTEGRATE_HELPERS_H
 

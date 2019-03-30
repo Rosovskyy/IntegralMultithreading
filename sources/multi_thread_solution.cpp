@@ -23,6 +23,7 @@ using std::endl;
 using std::ifstream;
 
 int main(int argc, char *argv[]) {
+
     if (argc != 3) {
         std::cout << "Wrong number of arguments" << std::endl;
         std::cout << "The format is following: <number of threads> <input file>" << std::endl;
@@ -34,6 +35,15 @@ int main(int argc, char *argv[]) {
         thread_num = std::stoi(argv[1]);
     } catch(std::bad_cast& bc){
         std::cerr << "The type of first argument is incorrect" << endl;
+        exit(-2);
+    }
+
+    try {
+        if (thread_num < 1) {
+            throw "Incorrect number of threads: < 1";
+        }
+    } catch (char *str) {
+        std::cout << str << std::endl;
         exit(-2);
     }
 

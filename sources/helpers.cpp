@@ -1,19 +1,15 @@
-//
-// Created by Yevhenii on 28/03/2019.
-//
-
 #include "../headers/helpers.h"
 
 configuration read_conf(std::istream &cf) {
-    std::ios::fmtflags flags(cf.flags()); // Save stream state
-    cf.exceptions(std::ifstream::failbit); // Enable exception on fail
+    std::ios::fmtflags flags(cf.flags());
+    cf.exceptions(std::ifstream::failbit);
 
     configuration res{};
     std::string temp;
 
     try {
         cf >> res.rel_err;
-        getline(cf, temp); // Відкидаємо комент.
+        getline(cf, temp);
         cf >> res.abs_err;
         getline(cf, temp);
         cf >> res.x1;
@@ -28,10 +24,9 @@ configuration read_conf(std::istream &cf) {
         getline(cf, temp);
         cf >> res.max_steps;
         getline(cf, temp);
-    } catch (std::ios_base::failure &fail) // Life without RAII is hard...
-    {
+    } catch (std::ios_base::failure &fail) {
         cf.flags(flags);
-        throw; // re-throw exception
+        throw;
     }
     cf.flags(flags);
     if (res.x2 <= res.x1) {

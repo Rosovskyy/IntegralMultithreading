@@ -1,0 +1,38 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Volumes/Transcend/UCU/2year/2 sem/ACS/integrate/headers/helpers.h
+iostream
+-
+fstream
+-
+chrono
+-
+cassert
+-
+atomic
+-
+string
+-
+
+/Volumes/Transcend/UCU/2year/2 sem/ACS/integrate/headers/intergration.h
+vector
+-
+thread
+-
+math.h
+-
+mutex
+-
+helpers.h
+/Volumes/Transcend/UCU/2year/2 sem/ACS/integrate/headers/helpers.h
+
+/Volumes/Transcend/UCU/2year/2 sem/ACS/integrate/sources/intergration.cpp
+../headers/intergration.h
+/Volumes/Transcend/UCU/2year/2 sem/ACS/integrate/headers/intergration.h
+

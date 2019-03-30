@@ -1,0 +1,4 @@
+/Volumes/Transcend/UCU/2year/2 sem/ACS/integrate/build/CMakeFiles/rebuild_cache.dir
+/Volumes/Transcend/UCU/2year/2 sem/ACS/integrate/build/CMakeFiles/edit_cache.dir
+/Volumes/Transcend/UCU/2year/2 sem/ACS/integrate/build/CMakeFiles/integrate_one_thread.dir
+/Volumes/Transcend/UCU/2year/2 sem/ACS/integrate/build/CMakeFiles/integrate_multi_thread.dir

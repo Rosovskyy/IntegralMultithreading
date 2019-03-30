@@ -1,7 +1,3 @@
-//
-// Created by Yevhenii on 29/03/2019.
-//
-
 #ifndef INTEGRATE_INTERGRATION_H
 #define INTEGRATE_INTERGRATION_
 
