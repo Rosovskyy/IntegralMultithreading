@@ -111,7 +111,7 @@ Result run_multi_thread_solution(configuration config, int threads_num){
         rel_err = fabs((cur_res - prev_res) / cur_res);
 
         to_continue = (abs_err > config.abs_err);
-        to_continue = to_continue && (rel_err > config.rel_err);
+        to_continue = to_continue || (rel_err > config.rel_err);
         to_continue = to_continue && (steps < config.max_steps);
     }
 
@@ -139,7 +139,7 @@ Result run_one_thread_solution(configuration config){
         rel_err = fabs((cur_res - prev_res) / cur_res);
 
         to_continue = (abs_err > config.abs_err);
-        to_continue = to_continue && (rel_err > config.rel_err);
+        to_continue = to_continue || (rel_err > config.rel_err);
         to_continue = to_continue && (steps < config.max_steps);
     }
 
