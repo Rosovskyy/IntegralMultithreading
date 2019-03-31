@@ -27,7 +27,7 @@ for i in range(1, max_num_of_threads + 1):
                                            str(mistake), '../conf.txt'],
                              stdout=subprocess.PIPE).communicate()[0].decode('utf-8'))
         print("For", i, "threads with", num_of_runs, "runs results are (minimum was taken): \t", p[0], "  time: ",
-              p[3]/1000000)
+              p[3], "microsecond")
         list_of_results.append([p[0], p[3], i])
 
 
