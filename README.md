@@ -18,20 +18,19 @@ This program finds the intral of the function of two variables using multithread
 ## Running 
   <i>(Inside the <b>bin</b> directory)</i>
   ### CPP FILE
-  <b>One thread file:</b>
+  <b>One thread file:</b><br>
     ```bash
     $ ./integrate_one_thread <input_file>
-    ```
-  <b>Multi thread file:</b>
+    ```<br>
+  <b>Multi thread file:</b><br>
     ```bash
     $ ./integrate_multi_thread <number_of_threads> <input file>
-    ```
+    ```<br>
   ### Python script
-    ```bash
     $ python3 script.py <program_name> <number_of_threads_for_multiple_threads_program> <times_to_run_the_program> <multiple_threads/both> <wanted_error> <conf_file> <exe>
+    
+  <b>All threads from 1..N</b><br>
     ```
-  <b>All threads from 1..N</b>
-    ```bash
     $ python3 script_different_threads.py <number_of_threads> <times_to_run_the_program>
     ```
 
