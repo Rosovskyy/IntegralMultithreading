@@ -1,6 +1,6 @@
 # IntegralMultithreading
 
-## Розпаралелення обрахунку інтегралу заданої функції
+## Розпаралелення обрахунку інтегралу заданої функції (ВАРІАНТ 1)
 
 ## Introduction
 This program finds the intral of the function of two variables using multithreading.
