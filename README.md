@@ -51,4 +51,4 @@ The first data file is <b>conf.txt</b>, the second one - <b>conf2.txt</b>
 
 
 ## License and copyright
-© Roman Milishcuk and Serhiy Rosovskyy, students of the Ukrainian Catholic University
+© Evhenii Molodtsov and Serhiy Rosovskyy, students of the Ukrainian Catholic University
