@@ -39,7 +39,7 @@ This program finds the intral of the function of two variables using multithread
 ## The table of the working time of each method.
 We tested the program on two different notebooks and data
 The first data file is <b>conf.txt</b>, the second one - <b>conf2.txt</b>
-### <a href="https://docs.google.com/spreadsheets/d/1Lz7ZOkt46eSk6qM3eEByrSSz2cZqpVWvGWbCdWl-CMg/edit#gid=0">Acer(Evhenii Molodtsov)</a>
+### <a href="https://docs.google.com/spreadsheets/d/1Lz7ZOkt46eSk6qM3eEByrSSz2cZqpVWvGWbCdWl-CMg/edit#gid=0">Acer(Yevhenii Molodtsov)</a>
 <img src="graphs/Acer1.png" width="50%">
 <img src="graphs/Acer2.png" width="50%">
 
@@ -49,4 +49,4 @@ The first data file is <b>conf.txt</b>, the second one - <b>conf2.txt</b>
 
 
 ## License and copyright
-© Evhenii Molodtsov and Serhiy Rosovskyy, students of the Ukrainian Catholic University
+© Yevhenii Molodtsov and Serhiy Rosovskyy, students of the Ukrainian Catholic University
